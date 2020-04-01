@@ -4,6 +4,7 @@ html {
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
+    font-family: "Sen",'Times New Roman', Times, serif;
 }
 
 .design {
@@ -11,6 +12,7 @@ html {
     font-size: 20px;
     margin: auto;
     color: white;
+    font-family: "Sen",'Times New Roman', Times, serif;
 }
 h1{
     justify-content: center;

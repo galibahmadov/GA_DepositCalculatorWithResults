@@ -7,7 +7,7 @@ class Application {
         });
     }
     getValue() {
-
+        document.getElementById('mainResultTable').innerHTML = ``;
         let deposit = new Deposit();
         let first = document.getElementById("first"),
             second = document.getElementById("second"),
@@ -22,14 +22,14 @@ class Application {
             beginBalanceController = true;
             first.className = "block";
         }
-        else {
+        else if (deposit.beginbalance <= 0) {
             first.className = "show"
         }
         if (deposit.monthlyAdding >= 0) {
             monthlyAddingController = true;
             second.className = "block";
         }
-        else {
+        else if(deposit.monthlyAdding < 0)  {
             second.className = "show";
         }
         if (deposit.periodMonth > 0 && Math.floor(deposit.periodMonth) == deposit.periodMonth) {
@@ -57,7 +57,7 @@ class Application {
     }
 
     tableMaker(highestAmmount, finalCalculatedResult) {
-        document.getElementById('mainResultTable').innerHTML = ``;
+        
         let finalResultTable = document.getElementById('mainResultTable');
         let tableHead = '<tr><th>Название Банка</th><th>Вклад</th><th>Процент</th><th>Итоговая сумма</th></tr>';
         let tableMain = '';
@@ -76,6 +76,48 @@ class Deposit {
         this.periodMonth = +(document.getElementById('periodMonth').value);
         this.currency = document.getElementById('currency').value;
 
+    }
+}
+
+class Calculator {
+    //инициализирующийся массивом продуктов BankProduct и вычисляющий наиболее выгодный вариант.
+    constructor() { }
+    calculateDeposit(deposit, highestAmmount) {
+        let realRate = highestAmmount[0].incomeType / 100 / 12;
+        let finalResult = deposit.beginbalance + (deposit.beginbalance * realRate);
+        let plusAmount = 0;
+        for (let i = 0; i < (Math.trunc(deposit.periodMonth - 1)); i++) {
+            plusAmount = (finalResult + deposit.monthlyAdding) * realRate + deposit.monthlyAdding;
+            finalResult += plusAmount;
+        }
+        return Math.round(finalResult);
+    }
+    searchSuggestions(client) {
+        let bank = new BankProduct();
+        console.log(bank);
+        const bankOffer = bank.res.filter(function (item) {
+            if (client.monthlyAdding > 0) {
+                return client.beginbalance >= item.sumMin && (client.beginbalance <= item.sumMax || item.sumMax == null) && client.periodMonth >= item.termMin && client.periodMonth <= item.termMax && item.canDeposit === true && client.currency == item.currency;
+            } else if (client.monthlyAdding == 0) {
+                return client.beginbalance >= item.sumMin && (client.beginbalance <= item.sumMax || item.sumMax == null) && client.periodMonth >= item.termMin && client.periodMonth <= item.termMax && item.canDeposit === false && client.currency == item.currency;
+            }
+        });
+        if (bankOffer.length == 0) {
+            alert('We Dont have any results');
+        }
+        return bankOffer;
+    }
+    getMaxBank(finalSuggestions) {
+        let maxPercent = finalSuggestions.reduce(function (prev, cur) {
+            if (prev.incomeType > cur.incomeType) {
+                return prev;
+            }
+            return cur;
+        });
+        let highestPercent = finalSuggestions.filter(function (item) {
+            return item.incomeType == maxPercent.incomeType;
+        });
+        return highestPercent;
     }
 }
 class BankProduct {
@@ -669,47 +711,6 @@ class BankProduct {
 
     }
 
-}
-class Calculator {
-    //инициализирующийся массивом продуктов BankProduct и вычисляющий наиболее выгодный вариант.
-    constructor() { }
-    calculateDeposit(deposit, highestAmmount) {
-        let realRate = highestAmmount[0].incomeType / 100 / 12;
-        let finalResult = deposit.beginbalance + (deposit.beginbalance * realRate);
-        let plusAmount = 0;
-        for (let i = 0; i < (Math.trunc(deposit.periodMonth - 1)); i++) {
-            plusAmount = (finalResult + deposit.monthlyAdding) * realRate + deposit.monthlyAdding;
-            finalResult += plusAmount;
-        }
-        return Math.round(finalResult);
-    }
-    searchSuggestions(client) {
-        let bank = new BankProduct();
-        console.log(bank);
-        const bankOffer = bank.res.filter(function (item) {
-            if (client.monthlyAdding > 0) {
-                return client.beginbalance >= item.sumMin && (client.beginbalance <= item.sumMax || item.sumMax == null) && client.periodMonth >= item.termMin && client.periodMonth <= item.termMax && item.canDeposit === true && client.currency == item.currency;
-            } else if (client.monthlyAdding == 0) {
-                return client.beginbalance >= item.sumMin && (client.beginbalance <= item.sumMax || item.sumMax == null) && client.periodMonth >= item.termMin && client.periodMonth <= item.termMax && item.canDeposit === false && client.currency == item.currency;
-            }
-        });
-        if (bankOffer.length == 0) {
-            alert('We Dont have any results');
-        }
-        return bankOffer;
-    }
-    getMaxBank(finalSuggestions) {
-        let maxPercent = finalSuggestions.reduce(function (prev, cur) {
-            if (prev.incomeType > cur.incomeType) {
-                return prev;
-            }
-            return cur;
-        });
-        let highestPercent = finalSuggestions.filter(function (item) {
-            return item.incomeType == maxPercent.incomeType;
-        });
-        return highestPercent;
-    }
 }
 
 new Application();
