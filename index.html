@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project M2_2</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Sen&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="design">
+        <header>
+            <img src="img/pashaBankLogo.png" alt="Bank logo" width=250px>
+        </header>
+        <h1>Подбор оптимального вклада</h1>
+        <main class="calculatorTable">
+            
+            <table>
+                <tr>
+                    <td>Начальная сумма</td>
+                    <td><input type="number" name="" id="beginbalance"></td>
+                </tr>
+                <tr>
+                    <td>Сумма ежемесячного пополнения</td>
+                    <td><input type="number" name="" id="monthlyAdding"></td>
+                </tr>
+                <tr>
+                    <td>Срок вклада</td>
+                    <td><input type="number" name="" id="periodMonth"></td>
+                </tr>
+                <tr>
+                    <td>Валюта вклада</td>
+                    <td><select type="text" id="currency">
+                            <option>RUB</option>
+                            <option>USD</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><button id="calculate">Подобрать</button></td>
+                </tr>
+            </table>
+
+        </main>
+        <div class="error">
+            <p id="first" class="block">Начальная сумма вклада содержит ошибку ввода</p>
+            <p id="second" class="block">Сумму ежемесячного пополнения содержит ошибку ввода</p>
+            <p id="third" class="block">Срок вклада (дней) содержит ошибку ввода</p>
+
+        </div>
+        
+    </div>
+    <div id="mainResultTable"></div>
+    <script src="index.js"></script>
+</body>
+
+</html>
